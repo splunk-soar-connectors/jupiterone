@@ -428,6 +428,7 @@ class JupiteroneConnector(BaseConnector):
         action_result.update_summary({"total_results": result_count})
 
         if result_count == 0:
+            self.save_progress("No results found")
             return action_result.set_status(phantom.APP_SUCCESS, JUPITERONE_NO_RESULTS_QUERY_PASSED)
 
         for result in results:
