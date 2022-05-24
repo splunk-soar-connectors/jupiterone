@@ -1,6 +1,6 @@
-# Splunk> Phantom
+# JupiterOne
 
-Welcome to the open-source repository for Splunk> Phantom's jupiterone App.
+## Contributing
 
 Please have a look at our [Contributing Guide](https://github.com/Splunk-SOAR-Apps/.github/blob/main/.github/CONTRIBUTING.md) if you are interested in contributing, raising issues, or learning more about open-source Phantom apps.
 
