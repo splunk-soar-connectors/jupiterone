@@ -1,6 +1,6 @@
 # File: jupiterone_consts.py
 #
-# Copyright (c) JupiterOne, 2022
+# Copyright (c) JupiterOne Inc., 2022
 #
 # This unpublished material is proprietary to JupiterOne.
 # All rights reserved. The methods and
