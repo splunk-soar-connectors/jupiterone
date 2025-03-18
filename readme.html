@@ -1,6 +1,6 @@
 <!-- File: readme.html
 
-    Copyright (c) JupiterOne Inc., 2022
+    Copyright (c) JupiterOne Inc., 2022-2025
 
     This unpublished material is proprietary to JupiterOne.
     All rights reserved. The methods and
@@ -26,11 +26,8 @@
       It is recommended to read the documentation for the app to understand the
       functioning of the actions and the asset configuration or the action
       parameters associated with it. For further details, refer to
-      <a
-        href="https://support.jupiterone.io/hc/en-us/articles/360022722094-JupiterOne-Platform-API"
-        target="_blank"
-        >JupiterOne Docs</a
-      >.
+      <a href="https://support.jupiterone.io/hc/en-us/articles/360022722094-JupiterOne-Platform-API"
+         target="_blank">JupiterOne Docs</a>.
     </p>
     <h2>Port Details</h2>
     <p>
@@ -56,9 +53,7 @@
     </table>
     <p></p>
     <h2>Steps to Configure the JupiterOne Phantom app's asset</h2>
-    <p>
-      Follow these steps to create an asset for the app in Phantom Platform:
-    </p>
+    <p>Follow these steps to create an asset for the app in Phantom Platform:</p>
     <ul>
       <li>Log in to the JupiterOne platform.</li>
       <ul>
@@ -80,9 +75,7 @@
           available at the left side bottom of the page and create an API key by
           providing <b>Key name</b> and <b>Days before expiration</b>.
         </li>
-        <li>
-          The API Key would be created and would be displayed in a dialog box.
-        </li>
+        <li>The API Key would be created and would be displayed in a dialog box.</li>
         <li>
           Copy the <b>Token</b> value from the dialog box and paste it into any
           text editor as backup, as it won't be visible again. Once copied,
@@ -94,14 +87,20 @@
       </ul>
       <li>Log in to your Phantom platform.</li>
       <ul>
-        <li>Navigate to the <b>Home</b> dropdown and select <b>Apps</b>.</li>
+        <li>
+          Navigate to the <b>Home</b> dropdown and select <b>Apps</b>.
+        </li>
         <li>Search the JupiterOne App from the search box.</li>
-        <li>Click on the <b>CONFIGURE NEW ASSET</b> button.</li>
+        <li>
+          Click on the <b>CONFIGURE NEW ASSET</b> button.
+        </li>
         <li>
           Navigate to the <b>Asset Info</b> tab and enter the Asset name and
           Asset description.
         </li>
-        <li>Navigate to the <b>Asset Settings</b> tab.</li>
+        <li>
+          Navigate to the <b>Asset Settings</b> tab.
+        </li>
         <li>
           Paste the <b>API Key</b> that was created from the JupiterOne UI and
           <b>Account ID</b> that was fetched by hitting a J1QL query from
@@ -120,13 +119,14 @@
       other actions of the application. The parameters related to test
       connectivity action are JupiterOne Account ID and API Key.
     </p>
-
     <ul>
       <li>
         <b>JupiterOne Account ID: </b> JupiterOne Account ID for asset
         authorization.
       </li>
-      <li><b>API Key</b>: API Key for asset authorization.</li>
+      <li>
+        <b>API Key</b>: API Key for asset authorization.
+      </li>
     </ul>
     <p></p>
     <h2>Explanation of the JupiterOne Actions' Parameters</h2>
@@ -155,7 +155,9 @@
         data paths of the action contain the paths of response data that the
         queries (used for testing) returned.
         <ul>
-          <li><b>Action Parameter: Query</b></li>
+          <li>
+            <b>Action Parameter: Query</b>
+          </li>
           <ul>
             <li>
               This parameter will accept the J1QL query for a JupiterOne
@@ -163,7 +165,9 @@
               invalid.
             </li>
           </ul>
-          <li><b>Action Parameter: Max Results</b></li>
+          <li>
+            <b>Action Parameter: Max Results</b>
+          </li>
           <ul>
             <li>
               This parameter allows the user to limit the number of results. It
@@ -171,7 +175,9 @@
               which it will fetch the first 250 results for a particular query.
             </li>
           </ul>
-          <li><b>Action Parameter: Include Deleted</b></li>
+          <li>
+            <b>Action Parameter: Include Deleted</b>
+          </li>
           <ul>
             <li>
               This parameter includes recently deleted information in the
