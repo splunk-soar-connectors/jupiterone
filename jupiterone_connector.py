@@ -1,6 +1,6 @@
 # File: jupiterone_connector.py
 #
-# Copyright (c) JupiterOne Inc., 2022
+# Copyright (c) JupiterOne Inc., 2022-2025
 #
 # This unpublished material is proprietary to JupiterOne.
 # All rights reserved. The methods and
@@ -51,7 +51,7 @@ class JupiteroneConnector(BaseConnector):
     def __init__(self):
         """Initialize global variables."""
         # Call the BaseConnectors init first
-        super(JupiteroneConnector, self).__init__()
+        super().__init__()
 
         self._state = {}
         self._account_id = None
@@ -79,9 +79,9 @@ class JupiteroneConnector(BaseConnector):
             pass
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
+            error_text = f"Error Message: {error_msg}"
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
+            error_text = f"Error Code: {error_code}. Error Message: {error_msg}"
 
         return error_text
 
@@ -96,11 +96,7 @@ class JupiteroneConnector(BaseConnector):
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
 
-        return RetVal(
-            action_result.set_status(
-                phantom.APP_ERROR, JUPITERONE_ERR_EMPTY_RESPONSE.format(response.status_code)
-            ), None
-        )
+        return RetVal(action_result.set_status(phantom.APP_ERROR, JUPITERONE_ERR_EMPTY_RESPONSE.format(response.status_code)), None)
 
     def _process_html_response(self, response, action_result):
         """
@@ -119,30 +115,29 @@ class JupiteroneConnector(BaseConnector):
             for element in soup(["script", "style", "footer", "nav"]):
                 element.extract()
             error_text = soup.text
-            split_lines = error_text.split('\n')
+            split_lines = error_text.split("\n")
             split_lines = [x.strip() for x in split_lines if x.strip()]
-            error_text = '\n'.join(split_lines)
+            error_text = "\n".join(split_lines)
         except Exception:
             error_text = JUPITERONE_UNABLE_TO_PARSE_ERR_DETAIL
 
         if not error_text:
             error_text = "Empty response and no information received"
-        message = "Status Code: {}. Data from server: {}".format(status_code, error_text)
+        message = f"Status Code: {status_code}. Data from server: {error_text}"
 
-        message = message.replace('{', '{{').replace('}', '}}')
+        message = message.replace("{", "{{").replace("}", "}}")
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _get_error_from_response(self, status_code, resp_json):
-
         error = resp_json.get("error")
         errors_list = resp_json.get("errors", [])
         try:
             if error:
-                message = "Error from server. Status Code: {}. Error Details: {}".format(status_code, error)
+                message = f"Error from server. Status Code: {status_code}. Error Details: {error}"
                 return message
 
             if errors_list and isinstance(errors_list, list):
-                error_msg = str()
+                error_msg = ""
                 for errors in errors_list:
                     if errors.get("code"):
                         error_msg += "{} - ".format(errors.get("code"))
@@ -170,11 +165,7 @@ class JupiteroneConnector(BaseConnector):
             resp_json = r.json()
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR, JUPITERONE_ERR_UNABLE_TO_PARSE_JSON_RESPONSE.format(error_msg)
-                ), None
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, JUPITERONE_ERR_UNABLE_TO_PARSE_JSON_RESPONSE.format(error_msg)), None)
 
         message = self._get_error_from_response(status_code, resp_json)
         if message:
@@ -185,10 +176,7 @@ class JupiteroneConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         # You should process the error returned in the json
-        message = "Error from server. Status Code: {0} Data from server: {1}".format(
-            status_code,
-            r.text.replace('{', '{{').replace('}', '}}')
-        )
+        message = "Error from server. Status Code: {} Data from server: {}".format(status_code, r.text.replace("{", "{{").replace("}", "}}"))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -201,22 +189,22 @@ class JupiteroneConnector(BaseConnector):
         :return: status phantom.APP_ERROR/phantom.APP_SUCCESS(along with appropriate message)
         """
         # store the r_text in debug data, it will get dumped in the logs if the action fails
-        if hasattr(action_result, 'add_debug_data'):
-            action_result.add_debug_data({'r_status_code': r.status_code})
-            action_result.add_debug_data({'r_text': r.text})
-            action_result.add_debug_data({'r_headers': r.headers})
+        if hasattr(action_result, "add_debug_data"):
+            action_result.add_debug_data({"r_status_code": r.status_code})
+            action_result.add_debug_data({"r_text": r.text})
+            action_result.add_debug_data({"r_headers": r.headers})
 
         # Process each 'Content-Type' of response separately
 
         # Process a json response
-        if 'json' in r.headers.get('Content-Type', ''):
+        if "json" in r.headers.get("Content-Type", ""):
             return self._process_json_response(r, action_result)
 
         # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
         # world, in case of errors, PROXY's return HTML, this function parses
         # the error and adds it to the action_result.
-        if 'html' in r.headers.get('Content-Type', ''):
+        if "html" in r.headers.get("Content-Type", ""):
             return self._process_html_response(r, action_result)
 
         # it's not content-type that is to be parsed, handle an empty response
@@ -224,9 +212,8 @@ class JupiteroneConnector(BaseConnector):
             return self._process_empty_response(r, action_result)
 
         # everything else is actually an error at this point
-        message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
-            r.status_code,
-            r.text.replace('{', '{{').replace('}', '}}')
+        message = "Can't process response from server. Status Code: {} Data from server: {}".format(
+            r.status_code, r.text.replace("{", "{{").replace("}", "}}")
         )
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
@@ -254,20 +241,13 @@ class JupiteroneConnector(BaseConnector):
         try:
             request_func = getattr(requests, method)
         except AttributeError:
-            return RetVal(
-                action_result.set_status(phantom.APP_ERROR, "Invalid method: {0}".format(method)),
-                resp_json
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, f"Invalid method: {method}"), resp_json)
 
         try:
             r = request_func(url, verify=verify, data=data, json=json, headers=headers, params=params, timeout=60)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR, JUPITERONE_ERR_CONNECTING_TO_SERVER.format(error_msg)
-                ), resp_json
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, JUPITERONE_ERR_CONNECTING_TO_SERVER.format(error_msg)), resp_json)
 
         return self._process_response(r, action_result)
 
@@ -314,10 +294,7 @@ class JupiteroneConnector(BaseConnector):
         allEntityCounts
         }
         """
-        data = {
-            "query": query,
-            "variables": {}
-        }
+        data = {"query": query, "variables": {}}
 
         # make rest call
         ret_val, response = self._make_rest_call(JUPITERONE_QUERY_ENDPOINT, action_result, json=data)
@@ -345,12 +322,7 @@ class JupiteroneConnector(BaseConnector):
         """
         items_list = list()
         while True:
-            ret_val, response = self._make_rest_call(
-                action_result=action_result,
-                url=JUPITERONE_QUERY_ENDPOINT,
-                json=json_data,
-                method="post"
-            )
+            ret_val, response = self._make_rest_call(action_result=action_result, url=JUPITERONE_QUERY_ENDPOINT, json=json_data, method="post")
             if phantom.is_fail(ret_val):
                 return action_result.get_status(), []
 
@@ -363,9 +335,7 @@ class JupiteroneConnector(BaseConnector):
             if len(items_list) >= max_results:
                 return phantom.APP_SUCCESS, items_list[:max_results]
 
-            cursor = (
-                response.get("data", {}).get("queryV1", {}).get("cursor")
-            )
+            cursor = response.get("data", {}).get("queryV1", {}).get("cursor")
             if not cursor:
                 break
 
@@ -382,10 +352,10 @@ class JupiteroneConnector(BaseConnector):
         """
         self.debug_print("Handling query run action")
 
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        user_query = param['query']
+        user_query = param["query"]
         include_deleted = param.get("include_deleted", False)
         max_results = param.get("max_results", JUPITERONE_DEFAULT_LIMIT)
         ret_val, max_results = self._validate_integer(action_result, max_results, "max_results")
@@ -407,20 +377,10 @@ class JupiteroneConnector(BaseConnector):
                 cursor
             }
         }"""
-        data = {
-            "query": query,
-            "variables": {
-                "query": user_query,
-                "cursor": "",
-                "includeDeleted": include_deleted
-            }
-        }
+        data = {"query": query, "variables": {"query": user_query, "cursor": "", "includeDeleted": include_deleted}}
 
         ret_val, results = self._paginator(
-            action_result=action_result,
-            endpoint=JUPITERONE_QUERY_ENDPOINT,
-            json_data=data,
-            max_results=max_results
+            action_result=action_result, endpoint=JUPITERONE_QUERY_ENDPOINT, json_data=data, max_results=max_results
         )
 
         if phantom.is_fail(ret_val):
@@ -452,10 +412,10 @@ class JupiteroneConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
+        if action_id == "test_connectivity":
             ret_val = self._handle_test_connectivity(param)
 
-        elif action_id == 'run_query':
+        elif action_id == "run_query":
             ret_val = self._handle_run_query(param)
 
         return ret_val
@@ -483,13 +443,10 @@ class JupiteroneConnector(BaseConnector):
 
         # get the asset config
         config = self.get_config()
-        self._api_key = config['api_key']
-        self._account_id = config['account_id']
+        self._api_key = config["api_key"]
+        self._account_id = config["account_id"]
 
-        self._headers = {
-            "Authorization": JUPITERONE_AUTHORIZATION_HEADER.format(self._api_key),
-            "JupiterOne-Account": self._account_id
-        }
+        self._headers = {"Authorization": JUPITERONE_AUTHORIZATION_HEADER.format(self._api_key), "JupiterOne-Account": self._account_id}
 
         return phantom.APP_SUCCESS
 
@@ -518,9 +475,9 @@ def main():
 
     argparser = argparse.ArgumentParser()
 
-    argparser.add_argument('input_test_json', help='Input Test JSON file')
-    argparser.add_argument('-u', '--username', help='username', required=False)
-    argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument("input_test_json", help="Input Test JSON file")
+    argparser.add_argument("-u", "--username", help="username", required=False)
+    argparser.add_argument("-p", "--password", help="password", required=False)
 
     args = argparser.parse_args()
     session_id = None
@@ -529,31 +486,31 @@ def main():
     password = args.password
 
     if username is not None and password is None:
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if username and password:
         try:
-            login_url = JupiteroneConnector._get_phantom_base_url() + '/login'
+            login_url = JupiteroneConnector._get_phantom_base_url() + "/login"
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=False, timeout=60)  # nosemgrep
-            csrftoken = r.cookies['csrftoken']
+            csrftoken = r.cookies["csrftoken"]
 
             data = dict()
-            data['username'] = username
-            data['password'] = password
-            data['csrfmiddlewaretoken'] = csrftoken
+            data["username"] = username
+            data["password"] = password
+            data["csrfmiddlewaretoken"] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
-            headers['Referer'] = login_url
+            headers["Cookie"] = "csrftoken=" + csrftoken
+            headers["Referer"] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=False, data=data, headers=headers, timeout=60)  # nosemgrep
-            session_id = r2.cookies['sessionid']
+            session_id = r2.cookies["sessionid"]
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
             sys.exit(1)
@@ -567,8 +524,8 @@ def main():
         connector.print_progress_message = True
 
         if session_id is not None:
-            in_json['user_session_token'] = session_id
-            connector._set_csrf_info(csrftoken, headers['Referer'])
+            in_json["user_session_token"] = session_id
+            connector._set_csrf_info(csrftoken, headers["Referer"])
 
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
@@ -576,5 +533,5 @@ def main():
     sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

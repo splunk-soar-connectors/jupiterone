@@ -1,6 +1,6 @@
 # File: jupiterone_consts.py
 #
-# Copyright (c) JupiterOne Inc., 2022
+# Copyright (c) JupiterOne Inc., 2022-2025
 #
 # This unpublished material is proprietary to JupiterOne.
 # All rights reserved. The methods and
@@ -47,7 +47,5 @@ ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configu
 
 # # Constants relating to "validate_integer"
 JUPITERONE_VALID_INT_MSG = "Please provide a valid integer value in the '{}' action parameter"
-JUPITERONE_NON_NEG_NON_ZERO_INT_MSG = (
-    "Please provide a valid non-zero positive integer value in the '{}' action parameter"
-)
+JUPITERONE_NON_NEG_NON_ZERO_INT_MSG = "Please provide a valid non-zero positive integer value in the '{}' action parameter"
 JUPITERONE_NON_NEG_INT_MSG = "Please provide a valid non-negative integer value in the '{}' action parameter"
