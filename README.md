@@ -1,7 +1,7 @@
 # JupiterOne
 
 Publisher: JupiterOne Inc. \
-Connector Version: 1.0.1 \
+Connector Version: 1.0.2 \
 Product Vendor: JupiterOne Inc. \
 Product Name: JupiterOne \
 Minimum Product Version: 5.2.0

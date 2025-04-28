@@ -16,8 +16,8 @@
         }
     ],
     "license": "Copyright (c) JupiterOne Inc., 2022-2025",
-    "app_version": "1.0.1",
-    "utctime_updated": "2022-01-20T09:05:36.120530Z",
+    "app_version": "1.0.2",
+    "utctime_updated": "2025-04-28T19:44:10.153268Z",
     "package_name": "phantom_jupiterone",
     "main_module": "jupiterone_connector.py",
     "min_phantom_version": "5.2.0",
